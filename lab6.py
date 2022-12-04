@@ -1,3 +1,22 @@
+"""
+Hello Grader, to run this EC program:
+1) In terminal run, python3 lab6.py port 
+2) In second terminal run, python3 lab6.py port port_from_terminal_one
+Example: 
+1) Terminal: python3 lab6.py 50123 (this starts a Bob node)
+2) Terminal 2: python3 lab6.py 50125 50123 (this starts a Alice node that speaks to a Bob node)
+
+Note) In my write up I sent to the professor I specified that it should use TCP/IP, 
+      but since every peer should be broadcasting a public key, i thought that UDP/IP
+      would make more since for this project. 
+
+Note) My secret value that is shared between the two is incorrect. I understand that the
+      shared key should equal (g^xy mod n), but my math logic is not correct at this time. 
+      For lack of time, meaning I should probally be focused on studying for my finals, 
+      I left the solution as is. 
+
+"""
+
 import random
 import socket
 import os, sys
@@ -10,8 +29,8 @@ HOST = '127.0.0.1' #for simplicity assume on same host
 DEFAULT_ADDRESS = (HOST, 0)
 BUFFER = 2048
 TEST_PORT = 50001
-N = 100_000
-G = 48
+N = 11
+G = 2
 
 
 class Node(object):
@@ -49,7 +68,7 @@ class Node(object):
             unpickeledData = pickle.loads(data)
             print("Listener( ",self.my_name,") Recieved Message: ", unpickeledData)
             val = int(data[2]) ** self.x
-            print("Final Value From", self.my_name, ":", val)
+            print("g^xy mod n", self.my_name, ":", val)
 
 
             # send message back
@@ -79,7 +98,7 @@ class Node(object):
             s.sendto(data, peer_address)
             data, address = s.recvfrom(BUFFER)
             my_data = pickle.loads(data)
-            print("Final Number(", self.my_name, "): ", self.print_final_number(my_data))
+            print("g^xy mod n", self.my_name, ": ", self.print_final_number(my_data))
                 
             
 
